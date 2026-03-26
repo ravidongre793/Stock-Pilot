@@ -1,10 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
 import stockRoutes from './routes/stocks.js';
 import stockService from './services/stockService.js';
 import { indianStocks } from './data/indianStocks.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +20,9 @@ app.use(express.json());
 
 // Routes
 app.use('/api/stocks', stockRoutes);
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Market overview route
 app.get('/api/market/overview', async (req, res) => {
@@ -101,6 +109,12 @@ async function broadcastPriceUpdates() {
 }
 
 setInterval(broadcastPriceUpdates, 30000);
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 // Start server
 server.listen(PORT, () => {
