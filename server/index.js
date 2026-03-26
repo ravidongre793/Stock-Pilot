@@ -36,7 +36,21 @@ app.get('/api/market/overview', async (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV || 'development',
+    stocksCount: indianStocks.length
+  });
+});
+
+// Debug endpoint to check internal state
+app.get('/api/debug', (req, res) => {
+  res.json({
+    dirname: __dirname,
+    staticPath: path.join(__dirname, '../client/dist'),
+    indianStocks: indianStocks.slice(0, 5)
+  });
 });
 
 // Create HTTP server

@@ -84,7 +84,9 @@ router.get('/predictions/all', async (req, res) => {
           const prediction = predictionService.generatePrediction(historical);
           predictions.push({ symbol: stock.symbol, name: stock.name, sector: stock.sector, ...prediction });
         }
-      } catch (e) { /* Skip failed stocks */ }
+      } catch (e) { 
+        console.error(`Failed to generate prediction for ${stock.symbol}:`, e.message);
+      }
     }
 
     let filtered = predictions;
