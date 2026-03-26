@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:5000/api';
-const WS_URL = 'ws://localhost:5000/ws';
+const API_BASE = 'https://stock-pilot-backend.onrender.com/api';
+const WS_URL = 'wss://stock-pilot-backend.onrender.com/ws';
 
 const api = axios.create({
   baseURL: API_BASE,
